@@ -1,0 +1,104 @@
+/*see db_task.png for task text*/
+
+/*creating tables:*/
+
+CREATE TABLE accounts (
+  id int NOT NULL,
+  created date NOT NULL,
+  trial_started date,
+  trial_ended date,
+  paid_started date,
+  paid_cancelled date,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE orders (
+  id int NOT NULL,
+  account_id int NOT NULL,
+  amount int NOT NULL,
+  currency ENUM('EUR', 'RUB', 'USD') NOT NULL,
+  month int NOT NULL,
+  created date NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (account_id)  REFERENCES accounts(id)
+);
+
+/*if payments can be scheduled and executed later this month
+but we want the statistics for the current month
+nevertheless - it seems viable to use current month and year only*/
+SET @curr_month = MONTH(CURDATE());
+SET @curr_year = YEAR(CURDATE());
+
+/*Sign Ups*/
+SELECT * FROM accounts
+  WHERE MONTH(created) = @curr_month
+  AND YEAR(created) = @curr_year;
+
+/*Free*/
+SELECT * FROM accounts
+  WHERE (MONTH(paid_cancelled) < @curr_month
+  AND YEAR(paid_cancelled) < @curr_year)
+  OR (paid_cancelled IS NULL
+  AND paid_started IS NULL);
+
+/*Trial*/
+SELECT * FROM accounts
+  WHERE MONTH(trial_started) = @curr_month
+  AND YEAR(trial_started) = @curr_year;
+
+/*Premium*/
+SELECT * FROM accounts
+  WHERE MONTH(paid_started) = @curr_month
+  AND YEAR(paid_started) = @curr_year;
+
+/*Premium Churn*/
+SELECT * FROM accounts
+  WHERE MONTH(paid_cancelled) = @curr_month
+  AND YEAR(paid_cancelled) = @curr_year;
+
+
+
+/* I assumed that revenue calculation is for the current month.
+I' m not really sure how MRR should be calculated here if e.g.
+a subscriber pays for 6 months in advance. I assumed that in cases
+of advanced payment we get all the money right away so the monthly revenue is
+increased but MRR is divided by the amount of months*/
+/*NB: If I knew SQL better I would use functions/procedures
+here but I'm short on time. I promise to master this in the
+nearest future :)*/
+
+/*MRR*/
+SELECT SUM(converted_amount / month) FROM (SELECT
+  CASE currency
+    WHEN 'RUB' THEN amount / 75
+    WHEN 'USD' THEN amount / 1.15
+    ELSE amount
+  END
+  AS converted_amount,
+  month
+ FROM orders /*using only orders with active subscription*/
+  WHERE (MONTH(
+    DATE_ADD(created,
+             INTERVAL month MONTH))
+    > @curr_month
+    AND YEAR(
+    DATE_ADD(created,
+             INTERVAL month MONTH))
+    = @curr_year)
+    OR YEAR(
+    DATE_ADD(created,
+             INTERVAL month MONTH))
+    > @curr_year) AS T;
+
+/*Revenue*/
+SELECT SUM(converted_amount) FROM (SELECT
+  CASE currency
+    WHEN 'RUB' THEN amount / 75
+    WHEN 'USD' THEN amount / 1.15
+    ELSE amount
+  END
+  AS converted_amount,
+  month
+ FROM orders
+  WHERE (MONTH(created) = @curr_month
+    AND YEAR(created) = @curr_year)) AS T;

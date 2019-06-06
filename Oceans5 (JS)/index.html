@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>VK App</title>
+        <script src="vk_api_methods.js"></script>
+        <script src="https://vk.com/js/api/openapi.js?146" type="text/javascript"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    
+    <body>
+        
+        <div class="main-container" id="main">
+            <h1 class="header">VK App</h1>
+            <button id="login" class="authorize" onclick="vk_init()">
+                <p>Авторизация</p>
+            </button>
+            <a id="user_link">
+                <div id="user">
+                </div>
+            </a>
+            <div id="results">
+            </div>
+            <button id="logout" class="authorize" onclick="logout()">
+                <p>Выход</p>
+            </button>
+        </div>
+        
+    </body>
+    
+    <script type="text/javascript">
+      VK.init({
+        apiId: 6075216
+      });
+    </script>
+    
+    <script>
+        
+        //switches visibility of the buttons on page depending on whether the user is logged in or not
+        function switch_buttons(logged_in) {
+            if (logged_in) {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("logout").style.display = "block";
+            } else {
+                document.getElementById("login").style.display = "block";
+                document.getElementById("logout").style.display = "none";
+                document.getElementById("results").innerHTML = "";
+                document.getElementById("user").innerHTML = "";
+            }
+        }
+        
+        //executes if the user is not logged in and presses authorization button
+        function vk_init(){
+            VK.Auth.login(function(val){
+                if (val.session != null){
+                    switch_buttons(true); get_user_info(val.session).then(set_user_info);
+                    get_user_friends(val).then(set_user_friends);
+                }
+            }, 2);
+        }
+        
+        //executes if the user is logged in when he visits the page
+        function vk_cont(){
+            switch_buttons(true);
+            get_user_friends().then(set_user_friends);
+        }
+        
+        //executes when user is logged in and presses logout button
+        function logout(){
+            switch_buttons(false);
+            VK.Auth.logout(function (){
+            });
+        }
+        
+    </script>
+    
+</html>

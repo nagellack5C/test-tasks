@@ -1,0 +1,80 @@
+body {
+    background-color: #222222;
+}
+
+.main-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20em;
+    margin-left: -10em;
+    margin-top: -20em;
+    font-family: Roboto;
+}
+
+p, h1 {
+    text-align: center;
+}
+
+p {
+    display: inline;
+    clear: left;
+}
+
+a {
+    text-decoration: none;
+}
+
+.authorize {
+    border: 0.1em solid black;
+    box-shadow: 0.1em 0.4em 0.5em white;
+    background-color: white;
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.authorize:hover {
+    box-shadow: none;
+    cursor: pointer;
+}
+
+img {
+    border-radius: 50%;
+    border: 0.3em solid grey;
+    vertical-align: middle;
+    margin-right: 2em;
+}
+
+.header {
+    font-weight: bold;
+    color: blanchedalmond;
+}
+
+.friend, #user {
+    color: blanchedalmond;
+    margin: 0 auto;
+    margin-bottom: 1em;
+}
+
+#user {
+    background-color: #966409;
+    border-radius: 30px;
+}
+
+button {
+    width: auto;
+    line-height: 2em;
+}
+
+#logout {
+    display: none;
+    margin-bottom: 2em;
+}
+
+#this-is-you{
+    float: right;
+    font-size: 0.7em;
+    margin-right: 2em;
+    vertical-align: center;
+}

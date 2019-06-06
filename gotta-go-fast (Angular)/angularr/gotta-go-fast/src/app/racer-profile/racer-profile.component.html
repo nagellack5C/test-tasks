@@ -1,0 +1,12 @@
+<mat-card>
+  <mat-card-header (click)="visible ? visible = false : visible = true">
+    <img [src]="driver_image" alt="" mat-card-avatar>
+    <mat-card-title>{{ driver.givenName }} {{ driver.familyName }}</mat-card-title>
+    <mat-card-subtitle>{{visible ? "Click to shrink" : "Click to expand"}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content *ngIf="visible">
+    Date of Birth: {{ driver.dateOfBirth }}<br>
+    Nationality: {{ driver.nationality }}<br>
+    <a [href]="driver.url" target="_blank">Wiki</a>
+  </mat-card-content>
+</mat-card>

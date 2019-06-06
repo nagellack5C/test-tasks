@@ -1,0 +1,16 @@
+<!-- <div class="myNavbar">
+    <a style="display: inline-block; margin: 10px ;" href="#">Select season</a>
+  <input  style="display: inline-block; margin: 10px right;" type="text" placeholder="Wack" [(ngModel)]="season">  &nbsp;
+  <button  style="display: inline-block;" (click)="getDrivers()">Go</button>
+</div> -->
+
+<mat-form-field
+  appearance="fill">
+    <mat-label>Enter a year:</mat-label>
+    <input matInput type="text" [(ngModel)]="season">
+</mat-form-field>
+<div style="text-align: center;">
+  <button mat-raised-button (click)="getDrivers()">
+    Go
+  </button>
+</div>

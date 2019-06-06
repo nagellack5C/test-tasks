@@ -1,0 +1,43 @@
+<mat-sidenav-container>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="!(isHandset$ | async)">
+    <mat-toolbar style="text-align: center;">Select Season</mat-toolbar>
+    <mat-nav-list>
+        <app-season-select
+        (drivers_list)="onDriversFound($event)">>
+        </app-season-select>
+      <!-- </div> -->
+      <div style="text-align: center;">
+        <a
+          style="margin: 10px"
+          *ngFor="let page of drivers | slice:0:(drivers.length+9)/10; let i = index"
+          href="#"
+          (click)="slice_drivers(i)">
+            {{ i+1 }}
+        </a>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>{{ title }}</span>
+    </mat-toolbar>
+    <!-- content -->
+    <div fxLayout="row wrap" fxLayout.lt-sm="row" fxLayoutGap="10px" fxLayoutAlign="flex-start">
+      <app-racer-profile
+        *ngFor="let driver of drivers_to_show"
+        [racer]="driver">
+      </app-racer-profile>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

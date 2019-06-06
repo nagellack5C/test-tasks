@@ -1,0 +1,11 @@
+mat-card {
+  margin: 10px;
+  flex-flow: row wrap;
+  display: inline-flex;
+  min-height: 100px;
+  width: 300px;
+}
+
+mat-card-header {
+  cursor: pointer;
+}
