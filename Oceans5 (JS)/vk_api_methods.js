@@ -20,7 +20,7 @@ function get_user_info(val){
         VK.Api.call('users.get', {users_id: id, "fields": "photo_50"}, function(user_info){
             if (user_info !== null){
                 console.log(user_info);
-                resolve(user_info.response[0]);
+                resolve(user_info.response);
             }
         });
     });
