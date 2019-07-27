@@ -15,6 +15,7 @@ function get_status() {
 //gets user's first name, last name and photo
 function get_user_info(val){
     return new Promise(function (resolve, reject) {
+        console.log(val)
         id = val.mid;
         VK.Api.call('users.get', {users_id: id, "fields": "photo_50"}, function(user_info){
             if (user_info !== null){
